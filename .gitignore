@@ -1,3 +1,9 @@
+# Lib
+nbs/models/
+data/
+models/
+
+# Other
 *.bak
 .gitattributes
 .last_checked
