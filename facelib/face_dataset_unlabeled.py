@@ -2,7 +2,8 @@
 
 __all__ = ['read_dict', 'save_dict', 'expression_map_default', 'gender_map_default', 'icao_map_default',
            'properties_map_default', 'lbl_config', 'icao_warnings', 'config', 'FACE_PATH', 'PATH', 'IM_PATH', 'DNAMES',
-           'pry_lbl2int', 'pitch_roll_yaw_mean', 'pitch_roll_yaw_std', 'get_filename2bboxes_dict', 'create_df']
+           'pry_lbl2int', 'pitch_roll_yaw_mean', 'pitch_roll_yaw_std', 'get_filename2bboxes_dict', 'create_df',
+           'get_filename2cropped_dict', 'create_cropped_data']
 
 # Cell
 from fastai import *
@@ -183,6 +184,8 @@ class config:
     FACE_PATH = Path("/data/faces/")
     PATH = FACE_PATH/"unlabeled"
     IM_PATH = PATH/"images"
+    CROPPED_IM_PATH = Path("../data/face/unlabeled_cropped_images/")
+    CROPPED_DICT_PATH = Path("../data/face/unlabeled_cropped_fn2label.pkl")
 
 # Cell
 FACE_PATH = Path("/data/faces/")
@@ -206,3 +209,15 @@ def create_df():
     for fn in fn2labels.keys():
         data.append((str(config.IM_PATH/fn), False, 'unlabeled'))
     return pd.DataFrame(data, columns=['image_path', 'valid', 'dataset'])
+
+# Cell
+def get_filename2cropped_dict():
+    return read_dict(config.CROPPED_DICT_PATH)
+
+# Cell
+def create_cropped_data():
+    fn2labels = get_filename2cropped_dict()
+    data = []
+    for fn in fn2labels.keys():
+        data.append((str(config.CROPPED_IM_PATH/fn), False, 'unlabeled_cropped'))
+    return pd.DataFrame(data, columns=['image_path', 'valid', 'dataset']), fn2labels
